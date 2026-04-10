@@ -65,7 +65,7 @@ export const HeroDigitalSuccess = () => {
           <span className="font-extrabold text-white">
             Reclutamiento, capacitación y RH
           </span>{' '}
-            —todo desde un solo lugar: contratación transparente, aprendizaje continuo 
+            —todo desde un solo sistema: contratación transparente, aprendizaje continuo 
             y flujos de trabajo automatizados con criterios definidos.
         </TimelineAnimation>
 
