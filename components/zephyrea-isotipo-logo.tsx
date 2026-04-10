@@ -40,7 +40,6 @@ export function ZephyreaIsotipoLogo({ variant, className }: ZephyreaIsotipoLogoP
       className={cn('shrink-0 select-none [-webkit-user-drag:none]', className)}
       aria-hidden
       focusable="false"
-      draggable={false}
       onDragStart={(e) => e.preventDefault()}
       onContextMenu={(e) => e.preventDefault()}
     >
