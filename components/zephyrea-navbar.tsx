@@ -1,6 +1,7 @@
 "use client";
 
 import React, { type RefObject } from "react";
+import Link from "next/link";
 import { ZephyreaIsotipoLogo } from "@/components/zephyrea-isotipo-logo";
 import {
   SAAS_PRODUCT,
@@ -25,6 +26,25 @@ import {
   WhatsappGlyphIcon,
   WHATSAPP_CHAT_HREF as WHATSAPP_START_HREF,
 } from "@/components/whatsapp-icon";
+import {
+  Users,
+  GraduationCap,
+  BarChart3,
+  ClipboardCheck,
+  LayoutGrid,
+  Building2,
+  ShoppingBag,
+  Briefcase,
+  MapPin,
+  HelpCircle,
+  BookOpen,
+  Rss,
+  Tag,
+  MessageCircle,
+  ChevronRight,
+  FileText,
+  Cookie,
+} from "lucide-react";
 
 const navItemBase = cn(
   "inline-flex h-9 items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium text-zinc-100 outline-none transition-colors",
@@ -33,7 +53,6 @@ const navItemBase = cn(
   "[&_svg]:text-zinc-300"
 );
 
-/** Sin left/transform: el positioner de Base UI ya alinea; el translate cortaba el panel a la izquierda. */
 const megaShellClass =
   "box-border w-full min-w-0 max-w-[min(100vw-1.5rem,56rem)] p-0";
 
@@ -51,106 +70,147 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
   const scrolled = useScrolled(20);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  /**
+   * El backdrop-blur NO va en el header directamente.
+   * Si el header tuviera backdrop-filter, se convertiría en containing block para
+   * position:fixed hijos (spec CSS) y el drawer quedaría encerrado en el header
+   * al hacer scroll. El blur se aplica en un div hijo absoluto independiente.
+   */
   const shellClass = cn(
-    "fixed left-0 right-0 top-0 z-[100] grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-6 py-3 transition-[background-color,backdrop-filter,border-color] duration-300 md:gap-4 md:px-10",
-    scrolled
-      ? "border-b border-white/10 bg-black/50 backdrop-blur-xl supports-[backdrop-filter]:bg-black/40"
-      : "border-b border-transparent bg-transparent"
+    "fixed left-0 right-0 top-0 z-[100] grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-6 py-3 transition-[border-color] duration-300 md:gap-4 md:px-10",
+    scrolled ? "border-b border-white/10" : "border-b border-transparent"
   );
 
   if (isMobile) {
     return (
       <header className={shellClass}>
+        {/* Blur overlay — hijo absoluto para que backdrop-filter NO afecte al drawer */}
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300",
+            scrolled
+              ? "opacity-100 bg-black/50 backdrop-blur-xl supports-[backdrop-filter]:bg-black/40"
+              : "opacity-0"
+          )}
+        />
+
+        {/* Hamburger + drawer */}
         <div className="min-w-0 justify-self-start">
-        <MotionDrawer
-          direction="left"
-          width={300}
-          backgroundColor="#000000"
-          clsBtnClassName="border-r border-neutral-900 bg-neutral-800 text-white"
-          contentClassName="border-r border-neutral-900 bg-black text-white"
-          btnClassName="relative left-0 top-0 w-fit bg-zinc-800 p-2 text-white"
-        >
-          <nav className="space-y-5 text-sm">
-            <div className="flex items-center gap-2 text-white">
-              <ZephyreaIsotipoLogo
-                variant={scrolled ? "bar" : "hero"}
-                className="h-8 w-8 shrink-0"
-              />
-              <span className="font-medium">AetherOZ</span>
-            </div>
+          <MotionDrawer
+            direction="left"
+            width={300}
+            backgroundColor="#080808"
+            clsBtnClassName="border border-white/10 bg-white/5 text-white/70 hover:text-white rounded-lg"
+            contentClassName="border-r border-white/[0.07]"
+            btnClassName="relative left-0 top-0 w-fit rounded-lg bg-white/8 p-2 text-white/80"
+          >
+            {/* ── Drawer interior ───────────────────────────────────── */}
+            <nav className="flex h-full flex-col gap-0 text-sm">
 
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                Producto
-              </p>
-              <div className="flex flex-col gap-1">
-                {SAAS_PRODUCT.slice(0, 5).map((item) => (
-                  <a
-                    key={item.title}
-                    href={item.href}
-                    className="rounded-md py-1.5 text-zinc-200 hover:bg-white/5"
-                  >
-                    {item.title}
-                  </a>
-                ))}
+              {/* Header */}
+              <div className="mb-5 flex items-center gap-3 border-b border-white/[0.07] pb-5">
+                <ZephyreaIsotipoLogo
+                  variant="hero"
+                  className="h-9 w-9 shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="text-[13px] font-semibold leading-tight text-white">AetherCore</p>
+                  <p className="text-[11px] leading-tight text-white/40">by Zephyrea</p>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                Soluciones
-              </p>
-              <div className="flex flex-col gap-1">
-                {SAAS_SOLUTIONS.map((item) => (
-                  <a
-                    key={item.title}
-                    href={item.href}
-                    className="rounded-md py-1.5 text-zinc-200 hover:bg-white/5"
-                  >
-                    {item.title}
-                  </a>
-                ))}
+              {/* Scrollable body */}
+              <div className="flex flex-1 flex-col gap-5 overflow-y-auto pb-4 pr-0.5 -mr-0.5">
+
+                {/* Producto */}
+                <NavDrawerSection
+                  label="Producto"
+                  icon={<LayoutGrid className="size-3" />}
+                  items={SAAS_PRODUCT.slice(0, 5)}
+                  itemIcons={[
+                    <Users key="u" className="size-3.5" />,
+                    <GraduationCap key="g" className="size-3.5" />,
+                    <BarChart3 key="b" className="size-3.5" />,
+                    <ClipboardCheck key="c" className="size-3.5" />,
+                    <LayoutGrid key="l" className="size-3.5" />,
+                  ]}
+                />
+
+                {/* Soluciones */}
+                <NavDrawerSection
+                  label="Soluciones"
+                  icon={<Building2 className="size-3" />}
+                  items={SAAS_SOLUTIONS}
+                  itemIcons={[
+                    <Users key="u" className="size-3.5" />,
+                    <ShoppingBag key="s" className="size-3.5" />,
+                    <Briefcase key="b" className="size-3.5" />,
+                    <MapPin key="m" className="size-3.5" />,
+                  ]}
+                />
+
+                {/* Recursos */}
+                <NavDrawerSection
+                  label="Recursos"
+                  icon={<BookOpen className="size-3" />}
+                  items={SAAS_RESOURCES.slice(0, 3)}
+                  itemIcons={[
+                    <HelpCircle key="h" className="size-3.5" />,
+                    <BookOpen key="b" className="size-3.5" />,
+                    <Rss key="r" className="size-3.5" />,
+                  ]}
+                />
+
+                {/* Divider + main nav */}
+                <div className="border-t border-white/[0.07] pt-3">
+                  <div className="flex flex-col gap-0.5">
+                    <NavDrawerLink href="#pricing" icon={<Tag className="size-3.5 shrink-0" />}>
+                      Precios
+                    </NavDrawerLink>
+                    <NavDrawerLink href="#contact" icon={<MessageCircle className="size-3.5 shrink-0" />}>
+                      Contacto
+                    </NavDrawerLink>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                Recursos
-              </p>
-              <div className="flex flex-col gap-1">
-                {SAAS_RESOURCES.map((item) => (
-                  <a
-                    key={item.title}
-                    href={item.href}
-                    className="rounded-md py-1.5 text-zinc-200 hover:bg-white/5"
+              {/* Footer legal */}
+              <div className="mt-2 border-t border-white/[0.06] pt-4">
+                <p className="mb-2.5 text-[10px] font-bold uppercase tracking-widest text-white/30">
+                  Legal
+                </p>
+                <div className="flex flex-col gap-0.5">
+                  <Link
+                    href="/privacidad"
+                    className="group flex items-center gap-2 rounded-md px-2 py-1.5 text-[12px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
                   >
-                    {item.title}
-                  </a>
-                ))}
+                    <FileText className="size-3 shrink-0" />
+                    Aviso de Privacidad
+                    <ChevronRight className="ml-auto size-3 opacity-0 transition-opacity group-hover:opacity-60" />
+                  </Link>
+                  <Link
+                    href="/cookies"
+                    className="group flex items-center gap-2 rounded-md px-2 py-1.5 text-[12px] text-white/60 transition-colors hover:bg-white/[0.05] hover:text-white"
+                  >
+                    <Cookie className="size-3 shrink-0" />
+                    Política de Cookies
+                    <ChevronRight className="ml-auto size-3 opacity-0 transition-opacity group-hover:opacity-60" />
+                  </Link>
+                </div>
               </div>
-            </div>
 
-            <a
-              href="#pricing"
-              className="block rounded-md py-2 font-medium text-zinc-100 hover:bg-white/5"
-            >
-              Precios
-            </a>
-            <a
-              href="#contact"
-              className="block rounded-md py-2 font-medium text-zinc-100 hover:bg-white/5"
-            >
-              Contacto
-            </a>
-          </nav>
-        </MotionDrawer>
+            </nav>
+          </MotionDrawer>
         </div>
 
+        {/* Logo centrado */}
         <ZephyreaIsotipoLogo
           variant={scrolled ? "bar" : "hero"}
           className="h-10 w-10 shrink-0 justify-self-center"
         />
 
+        {/* Bug 1 fix — mobile: solo ícono en círculo, sin texto */}
         <TimelineAnimation
           once={true}
           as="a"
@@ -159,11 +219,10 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
           rel="noopener noreferrer"
           animationNum={3}
           timelineRef={timelineRef}
-          className="group relative z-10 inline-flex w-fit justify-self-end items-center gap-3 rounded-full bg-[#25D366] px-5 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 active:scale-[0.98] md:gap-3.5 md:px-7 md:py-3 md:text-lg"
-          aria-label="Empezar: abrir WhatsApp (+52 5651912612)"
+          className="group flex size-11 items-center justify-center justify-self-end rounded-full bg-[#25D366] shadow-lg shadow-green-900/40 transition-colors hover:bg-[#20bd5a] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+          aria-label="Contactar por WhatsApp"
         >
-          <WhatsappGlyphIcon className={whatsappCtaIconClass} />
-          <span className="text-sm font-medium leading-none">Empezar</span>
+          <WhatsappGlyphIcon className="size-[22px] shrink-0 text-white transition-[filter] duration-200 group-hover:brightness-110" />
         </TimelineAnimation>
       </header>
     );
@@ -171,6 +230,17 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
 
   return (
     <header className={shellClass}>
+      {/* Blur overlay — separado del header para no romper fixed children */}
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300",
+          scrolled
+            ? "opacity-100 bg-black/50 backdrop-blur-xl supports-[backdrop-filter]:bg-black/40"
+            : "opacity-0"
+        )}
+      />
+
       <TimelineAnimation
         once={true}
         animationNum={1}
@@ -263,5 +333,61 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
         <span className="leading-none">Empezar</span>
       </TimelineAnimation>
     </header>
+  );
+}
+
+// ─── Drawer sub-components ────────────────────────────────────────────────────
+
+type NavDrawerSectionProps = {
+  label: string;
+  icon: React.ReactNode;
+  items: { title: string; href: string }[];
+  itemIcons: React.ReactNode[];
+};
+
+function NavDrawerSection({ label, icon, items, itemIcons }: NavDrawerSectionProps) {
+  return (
+    <div>
+      <p className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35">
+        {icon}
+        {label}
+      </p>
+      <div className="flex flex-col gap-0">
+        {items.map((item, i) => (
+          <a
+            key={item.title}
+            href={item.href}
+            className="group flex items-center gap-2.5 rounded-lg px-2 py-2 text-[13px] text-white/75 transition-colors hover:bg-white/[0.06] hover:text-white"
+          >
+            <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-white/[0.07] text-white/50 transition-colors group-hover:bg-white/[0.12] group-hover:text-white/80">
+              {itemIcons[i]}
+            </span>
+            {item.title}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function NavDrawerLink({
+  href,
+  icon,
+  children,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-[13px] font-medium text-white/85 transition-colors hover:bg-white/[0.06] hover:text-white"
+    >
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08] text-white/60">
+        {icon}
+      </span>
+      {children}
+    </a>
   );
 }
