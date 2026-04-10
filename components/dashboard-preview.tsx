@@ -17,22 +17,22 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
-  Filler,
+  Legend,
 } from 'chart.js'
 
 // ─── Types & Data ─────────────────────────────────────────────────────────────
 
 const MODULES = [
-  { id: 'reclutamiento', label: 'Reclutamiento', Icon: Users          },
-  { id: 'formacion',     label: 'Formación',      Icon: GraduationCap },
-  { id: 'indicadores',   label: 'Indicadores',    Icon: BarChart3     },
+  { id: 'reclutamiento', label: 'Reclutamiento',    Icon: Users          },
+  { id: 'formacion',     label: 'Capacitación',     Icon: GraduationCap },
+  { id: 'indicadores',   label: 'Recursos Humanos', Icon: BarChart3     },
 ] as const
 type ModuleId = (typeof MODULES)[number]['id']
 
 const SIDEBAR_NAV = [
-  { id: 'reclutamiento', label: 'Reclutamiento', Icon: Users          },
-  { id: 'formacion',     label: 'Formación',      Icon: GraduationCap },
-  { id: 'indicadores',   label: 'Indicadores',    Icon: BarChart3     },
+  { id: 'reclutamiento', label: 'Reclutamiento',    Icon: Users          },
+  { id: 'formacion',     label: 'Capacitación',     Icon: GraduationCap },
+  { id: 'indicadores',   label: 'Recursos Humanos', Icon: BarChart3     },
 ]
 
 // Reclutamiento
@@ -49,7 +49,7 @@ const CANDIDATES = [
   { name: 'Ana Martínez',  role: 'Data Analyst',    stage: 'Nuevos',     days: 1, color: 'from-pink-300 to-rose-400'     },
 ]
 
-// Formación
+// Capacitación (cursos demo)
 const COURSES = [
   { name: 'Seguridad e Higiene Industrial', done: 48, total: 58, color: 'bg-sky-500',     light: 'bg-sky-50 text-sky-700'        },
   { name: 'Inducción Corporativa',          done: 32, total: 32, color: 'bg-emerald-500', light: 'bg-emerald-50 text-emerald-700' },
@@ -83,7 +83,7 @@ const MODULE_CARDS = [
   {
     id: 'formacion' as ModuleId,
     Icon: GraduationCap,
-    title: 'Formación',
+    title: 'Capacitación',
     description: 'Asigna cursos, registra avances y cumple con NOM-035 y STPS sin archivos separados.',
     activeBg: 'bg-violet-50',      activeBorder: 'border-violet-200',
     activeIconBg: 'bg-violet-100', activeIconText: 'text-violet-600', activeStat: 'text-violet-600',
@@ -92,7 +92,7 @@ const MODULE_CARDS = [
   {
     id: 'indicadores' as ModuleId,
     Icon: BarChart3,
-    title: 'Indicadores',
+    title: 'Recursos Humanos',
     description: 'Rotación, tiempo de contratación y satisfacción en tiempo real para decidir con datos.',
     activeBg: 'bg-emerald-50',      activeBorder: 'border-emerald-200',
     activeIconBg: 'bg-emerald-100', activeIconText: 'text-emerald-600', activeStat: 'text-emerald-600',
@@ -147,9 +147,8 @@ function DonutChart({ pct, color = '#0ea5e9', label }: { pct: number; color?: st
 }
 
 /**
- * Chart.js LINE chart — "Contrataciones mensuales".
- * SSR-safe: all Chart.js work inside useEffect (client-only).
- * Mounts/unmounts with Indicadores tab → fresh animation every visit.
+ * Chart.js — tres líneas (Reclutamiento, Capacitación, Recursos Humanos).
+ * SSR-safe: todo el trabajo de Chart.js en useEffect (solo cliente).
  */
 function MonthlyHiresChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -158,32 +157,62 @@ function MonthlyHiresChart() {
   useEffect(() => {
     if (!canvasRef.current) return
 
-    Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Filler)
+    Chart.register(
+      LineController,
+      LineElement,
+      PointElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+    )
 
-    const vals   = [8, 14, 11, 18, 22, 29]
     const labels = ['Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr']
 
     chartRef.current = new Chart(canvasRef.current, {
       type: 'line',
       data: {
         labels,
-        datasets: [{
-          data: vals,
-          borderColor: '#0ea5e9',
-          borderWidth: 2,
-          backgroundColor: 'rgba(14,165,233,0.07)',
-          fill: true,
-          tension: 0.42,
-          pointBackgroundColor: vals.map((_, i) => i === vals.length - 1 ? '#0ea5e9' : '#fff'),
-          pointBorderColor: '#0ea5e9',
-          pointBorderWidth: 1.5,
-          pointRadius: vals.map((_, i) => i === vals.length - 1 ? 5 : 3),
-          pointHoverRadius: 6,
-        }],
+        datasets: [
+          {
+            label: 'Reclutamiento',
+            data: [12, 15, 11, 18, 21, 24],
+            borderColor: '#0ea5e9',
+            backgroundColor: 'rgba(14, 165, 233, 0.12)',
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.35,
+            fill: false,
+          },
+          {
+            label: 'Capacitación',
+            data: [9, 10, 14, 13, 16, 19],
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.12)',
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.35,
+            fill: false,
+          },
+          {
+            label: 'Recursos Humanos',
+            data: [7, 9, 10, 12, 14, 17],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            tension: 0.35,
+            fill: false,
+          },
+        ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
         animation: { duration: 900, easing: 'easeOutQuart' },
         scales: {
           x: {
@@ -191,13 +220,37 @@ function MonthlyHiresChart() {
             border: { display: false },
             ticks:  { font: { size: 9, family: 'inherit' }, color: '#94a3b8' },
           },
-          y: { display: false, beginAtZero: true },
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(148, 163, 184, 0.15)' },
+            border: { display: false },
+            ticks: {
+              font: { size: 8, family: 'inherit' },
+              color: '#94a3b8',
+              maxTicksLimit: 5,
+            },
+          },
         },
         plugins: {
-          legend:  { display: false },
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 8,
+              boxHeight: 8,
+              padding: 10,
+              font: { size: 9, family: 'inherit' },
+              color: '#64748b',
+            },
+          },
           tooltip: {
-            displayColors: false,
-            callbacks: { label: (ctx) => `${ctx.raw} contrataciones` },
+            callbacks: {
+              label: (ctx) => {
+                const v = ctx.raw
+                const n = typeof v === 'number' ? v : Number(v)
+                return `${ctx.dataset.label ?? ''}: ${n} actividades`
+              },
+            },
           },
         },
       },
@@ -432,11 +485,13 @@ function IndicadoresModule() {
         <div className="rounded-xl border border-zinc-100 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col flex-1">
           <div className="flex items-start justify-between mb-4 shrink-0">
             <div>
-              <p className="text-[12px] font-bold text-zinc-800">Contrataciones mensuales</p>
-              <p className="text-[10px] text-zinc-400 mt-0.5">Últimos 6 meses</p>
+              <p className="text-[12px] font-bold text-zinc-800">Actividad mensual por módulo</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">
+                Reclutamiento · Capacitación · Recursos Humanos · últimos 6 meses
+              </p>
             </div>
-            <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-100 shrink-0">
-              <TrendingUp size={9} /> +125%
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-sky-700 bg-sky-50 px-2 py-1 rounded-full border border-sky-100 shrink-0">
+              3 módulos
             </div>
           </div>
           {/* Chart fills remaining card height — Chart.js needs explicit height on container */}
@@ -548,9 +603,9 @@ export function DashboardPreview() {
   const currentModule = MODULES.find(m => m.id === active)!
 
   const moduleHeaders: Record<ModuleId, { title: string; sub: string }> = {
-    reclutamiento: { title: 'Pipeline de Candidatos', sub: 'Vacante activa: Dev Full Stack' },
-    formacion:     { title: 'Plan de Capacitación',   sub: 'Q2 2026 · 94 colaboradores'    },
-    indicadores:   { title: 'Indicadores RH',          sub: 'Abril 2026 · Vista mensual'    },
+    reclutamiento: { title: 'Pipeline de candidatos', sub: 'Vacante activa: Dev Full Stack' },
+    formacion:     { title: 'Plan de capacitación',    sub: 'Q2 2026 · 94 colaboradores'     },
+    indicadores:   { title: 'Panel Recursos Humanos', sub: 'Abril 2026 · vista mensual'      },
   }
 
   // ── Auto-rotating tabs ────────────────────────────────────────────────────
@@ -622,10 +677,11 @@ export function DashboardPreview() {
                 id="dashboard-heading"
                 className="text-2xl sm:text-3xl xl:text-[1.875rem] 2xl:text-4xl font-bold text-zinc-900 tracking-tight leading-tight"
               >
-                Todo tu RH en un solo lugar
+                Reclutamiento, Capacitación y RH en un solo sistema
               </h2>
-              <p className="text-zinc-500 mt-3 text-sm leading-relaxed max-w-md">
-                Reclutamiento, formación e indicadores conectados. Sin hojas de cálculo, sin correos perdidos.
+              <p className="mt-3 max-w-md text-pretty text-sm leading-relaxed text-zinc-500">
+                Contratar, dar cursos y ver cómo va el equipo, todo en un solo lugar — sin tantas
+                hojas sueltas ni el mismo dato en tres sistemas. Eso es AetherCore.
               </p>
 
               {/* Module selector cards with auto-rotation */}
