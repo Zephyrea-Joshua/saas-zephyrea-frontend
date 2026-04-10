@@ -532,7 +532,7 @@ function Sidebar({ active, onSelect }: { active: ModuleId; onSelect: (id: Module
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
-const DURATION = 4000
+const DURATION = 7000
 
 export function DashboardPreview() {
   const [active, setActive]           = useState<ModuleId>('reclutamiento')
@@ -590,14 +590,14 @@ export function DashboardPreview() {
       <section
         ref={sectionRef}
         id="plataforma"
-        className="relative bg-white py-16 sm:py-20 scroll-mt-20 overflow-hidden"
+        className="relative bg-white min-h-dvh flex flex-col justify-center py-12 sm:py-16 overflow-hidden"
         aria-labelledby="dashboard-heading"
       >
         {/* Ambient blurs */}
         <div aria-hidden className="pointer-events-none absolute -top-16 -right-32 size-[480px] rounded-full bg-sky-50/70 blur-[80px]" />
         <div aria-hidden className="pointer-events-none absolute bottom-0 -left-24 size-[320px] rounded-full bg-violet-50/50 blur-[80px]" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
           {/*
            * Outer two-column layout.
