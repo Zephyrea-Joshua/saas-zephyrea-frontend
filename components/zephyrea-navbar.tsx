@@ -1,7 +1,7 @@
 "use client";
 
 import React, { type RefObject } from "react";
-import { BrandLogoImage } from "@/components/brand-logo-image";
+import { ZephyreaIsotipoLogo } from "@/components/zephyrea-isotipo-logo";
 import {
   SAAS_PRODUCT,
   SAAS_RESOURCES,
@@ -51,10 +51,6 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
   const scrolled = useScrolled(20);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const logoSrc = scrolled
-    ? "/zephyrea-logos/logo-isotipo-aislado.svg"
-    : "/zephyrea-logos/logo-isotipo-blanco.svg";
-
   const shellClass = cn(
     "fixed left-0 right-0 top-0 z-[100] grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-6 py-3 transition-[background-color,backdrop-filter,border-color] duration-300 md:gap-4 md:px-10",
     scrolled
@@ -76,13 +72,9 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
         >
           <nav className="space-y-5 text-sm">
             <div className="flex items-center gap-2 text-white">
-              <BrandLogoImage
-                src={logoSrc}
-                alt=""
-                width={32}
-                height={32}
+              <ZephyreaIsotipoLogo
+                variant={scrolled ? "bar" : "hero"}
                 className="h-8 w-8 shrink-0"
-                unoptimized
               />
               <span className="font-medium">AetherOZ</span>
             </div>
@@ -154,13 +146,9 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
         </MotionDrawer>
         </div>
 
-        <BrandLogoImage
-          src={logoSrc}
-          alt=""
-          width={40}
-          height={40}
+        <ZephyreaIsotipoLogo
+          variant={scrolled ? "bar" : "hero"}
           className="h-10 w-10 shrink-0 justify-self-center"
-          unoptimized
         />
 
         <TimelineAnimation
@@ -189,14 +177,9 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
         timelineRef={timelineRef}
         className="flex min-w-0 shrink-0 items-center justify-self-start gap-2"
       >
-        <BrandLogoImage
-          src={logoSrc}
-          alt=""
-          width={40}
-          height={40}
+        <ZephyreaIsotipoLogo
+          variant={scrolled ? "bar" : "hero"}
           className="h-10 w-10 shrink-0"
-          priority
-          unoptimized
         />
       </TimelineAnimation>
 
