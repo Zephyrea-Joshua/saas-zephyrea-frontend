@@ -31,7 +31,10 @@ export const siteConfig = {
   social: {
     twitterHandle: 'ZephyreaDigital',
     instagram: 'https://www.instagram.com/zephyrea_site',
-    facebook: 'https://www.facebook.com/Zephyrea',
+    facebook: [
+      'https://www.facebook.com/profile.php?id=61588389483869',
+      'https://www.facebook.com/profile.php?id=61579548736379',
+    ] as string[],
   },
   contact: {
     email: 'contacto@zephyrea.site',

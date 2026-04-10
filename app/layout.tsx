@@ -96,7 +96,7 @@ const organizationSchema = {
   // sameAs: perfiles oficiales de la empresa (NO el dominio del producto)
   sameAs: [
     siteConfig.social.instagram,
-    siteConfig.social.facebook,
+    ...siteConfig.social.facebook,
   ],
 }
 
@@ -212,7 +212,9 @@ export default function RootLayout({
         {/* rel="me": conecta esta propiedad con el sitio corporativo ya indexado */}
         <link rel="me" href={siteConfig.corporateUrl} />
         <link rel="me" href={siteConfig.social.instagram} />
-        <link rel="me" href={siteConfig.social.facebook} />
+        {siteConfig.social.facebook.map((url) => (
+          <link key={url} rel="me" href={url} />
+        ))}
 
         {/* JSON-LD */}
         <JsonLd data={organizationSchema} />
