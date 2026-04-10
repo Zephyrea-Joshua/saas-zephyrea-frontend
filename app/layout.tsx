@@ -6,6 +6,7 @@ import { ZephyreaShaderBackground } from '@/components/zephyrea-shader-backgroun
 import { JsonLd } from '@/components/seo/JsonLd'
 import { CookieBanner } from '@/components/legal/CookieBanner'
 import { AnalyticsLoader } from '@/components/analytics/AnalyticsLoader'
+import { LenisProvider } from '@/components/lenis-provider'
 import { siteConfig, absoluteUrl } from '@/lib/seo/config'
 
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-sans' })
@@ -224,7 +225,9 @@ export default function RootLayout({
       </head>
       <body className="bg-background text-foreground relative flex min-h-full flex-col">
         <ZephyreaShaderBackground />
-        <div className="relative z-10 flex min-h-full flex-1 flex-col">{children}</div>
+        <LenisProvider>
+          <div className="relative z-10 flex min-h-full flex-1 flex-col">{children}</div>
+        </LenisProvider>
         <CookieBanner />
         <AnalyticsLoader />
       </body>
