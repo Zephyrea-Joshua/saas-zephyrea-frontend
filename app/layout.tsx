@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Montserrat } from 'next/font/google'
+import { Geist, Geist_Mono, Montserrat, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { ZephyreaShaderBackground } from '@/components/zephyrea-shader-background'
@@ -10,6 +10,13 @@ import { LenisProvider } from '@/components/lenis-provider'
 import { siteConfig, absoluteUrl } from '@/lib/seo/config'
 
 const montserrat = Montserrat({ subsets: ['latin'], variable: '--font-sans' })
+
+/** Franja de confianza / marquee — sans premium, legible a gran escala */
+const trustMarqueeFont = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-trust-marquee',
+  weight: ['600', '700', '800'],
+})
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -196,12 +203,13 @@ export default function RootLayout({
     <html
       lang={siteConfig.lang}
       className={cn(
-        'h-full',
+        'min-h-full',
         'antialiased',
         geistSans.variable,
         geistMono.variable,
         'font-sans',
         montserrat.variable,
+        trustMarqueeFont.variable,
       )}
     >
       <head>

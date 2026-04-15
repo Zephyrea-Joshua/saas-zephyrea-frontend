@@ -74,7 +74,7 @@ export function ZephyreaShaderBackground() {
             width: "100%",
             height: "100%",
           }}
-          lazyLoad={false}
+          lazyLoad={true}
           pixelDensity={1}
           fov={50}
           pointerEvents="none"

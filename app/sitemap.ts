@@ -38,6 +38,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: `${base}/aviso-legal`,
+      lastModified: now,
+      changeFrequency: 'yearly',
+      priority: 0.45,
+    },
+    {
       url: `${base}/cookies`,
       lastModified: now,
       changeFrequency: 'yearly',

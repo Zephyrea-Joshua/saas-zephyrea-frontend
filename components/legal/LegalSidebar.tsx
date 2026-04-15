@@ -2,10 +2,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
+import { useLenisScrollTo } from '@/components/lenis-provider'
 
 type Section = { id: string; label: string }
 
 export function LegalSidebar({ sections }: { sections: Section[] }) {
+  const scrollToId = useLenisScrollTo()
   const [activeIndex, setActiveIndex] = useState(0)
   const [dotY,        setDotY]        = useState(0)
   const [lineH,       setLineH]       = useState(0)
@@ -27,37 +29,49 @@ export function LegalSidebar({ sections }: { sections: Section[] }) {
     setLineH(center)
   }, [])
 
-  // IntersectionObserver — detect which section is in view
+  /**
+   * Scroll espía por posición (no solo IntersectionObserver): secciones cortas o fin de página
+   * activan bien el último ítem del menú y el scroll táctil recorre todo el documento.
+   */
   useEffect(() => {
-    const observers = sections.map((section, index) => {
-      const el = document.getElementById(section.id)
-      if (!el) return null
+    const updateActive = () => {
+      const scrollY = window.scrollY
+      const vh = window.innerHeight
+      const doc = document.documentElement
+      const maxScroll = Math.max(0, doc.scrollHeight - vh)
 
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveIndex(index)
-          }
-        },
-        { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
-      )
-      obs.observe(el)
-      return obs
-    })
+      if (maxScroll > 0 && scrollY >= maxScroll - 6) {
+        setActiveIndex(sections.length - 1)
+        return
+      }
 
-    return () => observers.forEach((o) => o?.disconnect())
+      const boundary = scrollY + Math.min(152, vh * 0.2)
+      let active = 0
+      for (let i = 0; i < sections.length; i++) {
+        const el = document.getElementById(sections[i].id)
+        if (!el) continue
+        const top = el.getBoundingClientRect().top + scrollY
+        if (top <= boundary) active = i
+      }
+      setActiveIndex(active)
+    }
+
+    updateActive()
+    window.addEventListener('scroll', updateActive, { passive: true })
+    window.addEventListener('resize', updateActive)
+    return () => {
+      window.removeEventListener('scroll', updateActive)
+      window.removeEventListener('resize', updateActive)
+    }
   }, [sections])
 
   // Re-measure whenever active index changes or window resizes
   useEffect(() => {
     measure(activeIndex)
-    window.addEventListener('resize', () => measure(activeIndex))
-    return () => window.removeEventListener('resize', () => measure(activeIndex))
+    const onResize = () => measure(activeIndex)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
   }, [activeIndex, measure])
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
 
   return (
     <div ref={navRef} className="relative">
@@ -91,7 +105,10 @@ export function LegalSidebar({ sections }: { sections: Section[] }) {
             key={s.id}
             ref={(el) => { itemRefs.current[i] = el }}
             href={`#${s.id}`}
-            onClick={(e) => { e.preventDefault(); scrollTo(s.id) }}
+            onClick={(e) => {
+              e.preventDefault()
+              scrollToId(s.id)
+            }}
             className={cn(
               'relative py-[9px] pl-7 pr-2 text-sm transition-all duration-200',
               i === activeIndex

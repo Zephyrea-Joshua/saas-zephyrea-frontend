@@ -27,6 +27,7 @@ const SECTIONS = [
   { id: 'personalizacion', label: 'Personalización' },
   { id: 'gestion',    label: 'Cómo gestionarlas' },
   { id: 'base-legal', label: 'Base legal' },
+  { id: 'contacto',  label: 'Contacto' },
 ]
 
 export default function CookiesPage() {

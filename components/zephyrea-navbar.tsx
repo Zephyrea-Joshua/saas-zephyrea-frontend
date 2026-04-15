@@ -62,6 +62,9 @@ const whatsappCtaIconClass = cn(
   "group-hover:brightness-110"
 );
 
+/** Alineado al hero: stagger corto + sin esperar al observer en above-the-fold. */
+const NAV_MOTION = { delayStep: 0.06, duration: 0.3, instantInView: true } as const;
+
 type ZephyreaNavbarProps = {
   timelineRef: RefObject<HTMLDivElement | null>;
 };
@@ -217,7 +220,8 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
           href={WHATSAPP_START_HREF}
           target="_blank"
           rel="noopener noreferrer"
-          animationNum={3}
+          animationNum={2}
+          {...NAV_MOTION}
           timelineRef={timelineRef}
           className="group flex size-11 items-center justify-center justify-self-end rounded-full bg-[#25D366] shadow-lg shadow-green-900/40 transition-colors hover:bg-[#20bd5a] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
           aria-label="Contactar por WhatsApp"
@@ -243,7 +247,8 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
 
       <TimelineAnimation
         once={true}
-        animationNum={1}
+        animationNum={0}
+        {...NAV_MOTION}
         timelineRef={timelineRef}
         className="flex min-w-0 shrink-0 items-center justify-self-start gap-2"
       >
@@ -255,7 +260,8 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
 
       <TimelineAnimation
         once={true}
-        animationNum={2}
+        animationNum={1}
+        {...NAV_MOTION}
         timelineRef={timelineRef}
         className="flex min-w-0 max-w-full justify-center justify-self-center overflow-x-auto"
       >
@@ -324,7 +330,8 @@ export function ZephyreaNavbar({ timelineRef }: ZephyreaNavbarProps) {
         href={WHATSAPP_START_HREF}
         target="_blank"
         rel="noopener noreferrer"
-        animationNum={3}
+        animationNum={2}
+        {...NAV_MOTION}
         timelineRef={timelineRef}
         className="group inline-flex w-fit shrink-0 justify-self-end items-center gap-3 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 active:scale-[0.98] md:gap-3 md:px-7 md:py-3"
         aria-label="Empezar: abrir WhatsApp (+52 5651912612)"

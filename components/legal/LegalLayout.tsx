@@ -51,7 +51,7 @@ export function LegalLayout({
       </div>
 
       {/* ── Body: sidebar + content ────────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-6 py-16 sm:px-12 lg:px-20">
+      <div className="mx-auto max-w-7xl px-6 pt-16 pb-32 sm:px-12 sm:pb-36 lg:px-20 lg:pb-40">
         <div className="flex gap-16 lg:gap-24">
 
           {/* Animated timeline sidebar */}

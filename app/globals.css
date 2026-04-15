@@ -140,6 +140,8 @@
     color-scheme: dark;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
     scrollbar-width: thin;
+    /* Permite que el documento crezca y el scroll llegue al final en páginas largas (legal, cookies). */
+    overflow-y: auto;
   }
 
   html::-webkit-scrollbar {

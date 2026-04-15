@@ -1,8 +1,16 @@
 'use client'
 import { useRef } from 'react'
+import { MessageCircle } from 'lucide-react'
 import { AnimatedButton } from '@/components/ui/animated-button'
 import { TimelineAnimation } from '@/components/ui/timeline-animation'
 import { ZephyreaNavbar } from '@/components/zephyrea-navbar'
+
+/** Stagger mínimo + `instantInView` evita esperar al IntersectionObserver tras hidratar. */
+const HERO_MOTION = {
+  delayStep: 0.05,
+  duration: 0.28,
+  instantInView: true,
+} as const
 
 const HERO_FEATURE_PILLS = [
   {
@@ -48,7 +56,8 @@ export const HeroDigitalSuccess = () => {
         <TimelineAnimation
           once={true}
           as="h1"
-          animationNum={4}
+          animationNum={0}
+          {...HERO_MOTION}
           timelineRef={timelineRef}
           className="max-w-[min(100%,1400px)] pb-7 text-[clamp(3rem,11.5vw,7rem)] font-bold leading-[0.98] tracking-[-0.02em] text-sky-300 drop-shadow-[0_0_60px_rgba(56,189,248,0.35)] md:pb-9"
         >
@@ -58,7 +67,8 @@ export const HeroDigitalSuccess = () => {
         <TimelineAnimation
           once={true}
           as="p"
-          animationNum={5}
+          animationNum={1}
+          {...HERO_MOTION}
           timelineRef={timelineRef}
           className="max-w-5xl pb-10 text-[clamp(1.25rem,4.2vw,2.125rem)] font-normal leading-snug text-white md:pb-12 md:leading-[1.38]"
         >
@@ -73,7 +83,8 @@ export const HeroDigitalSuccess = () => {
           <TimelineAnimation
             once={true}
             as="div"
-            animationNum={6}
+            animationNum={2}
+            {...HERO_MOTION}
             timelineRef={timelineRef}
             className="flex flex-shrink-0 flex-wrap items-center gap-3 md:gap-4"
           >
@@ -85,12 +96,10 @@ export const HeroDigitalSuccess = () => {
               className="shadow-[0_0_40px_rgba(56,189,248,0.12)]"
             >
               <span className="flex items-center gap-3">
-                <img
-                  src="https://picsum.photos/seed/ds/50"
-                  className="h-6 w-6 shrink-0 rounded-full object-cover"
-                  alt=""
-                  width={24}
-                  height={24}
+                <MessageCircle
+                  className="h-6 w-6 shrink-0 text-sky-600"
+                  aria-hidden
+                  strokeWidth={2}
                 />
                 Solicita una Demo
               </span>
@@ -102,14 +111,15 @@ export const HeroDigitalSuccess = () => {
               rounded="full"
               className="text-white"
             >
-              Ver como funciona
+              Ver cómo funciona
             </AnimatedButton>
           </TimelineAnimation>
 
           <TimelineAnimation
             once={true}
             as="p"
-            animationNum={7}
+            animationNum={3}
+            {...HERO_MOTION}
             timelineRef={timelineRef}
             className="max-w-md flex-1 text-sm leading-relaxed text-white/95 md:text-base md:leading-relaxed lg:pt-0.5"
           >
@@ -126,20 +136,16 @@ export const HeroDigitalSuccess = () => {
         <h2 className="sr-only">Funciones principales</h2>
         <TimelineAnimation
           once={true}
-          animationNum={8}
+          animationNum={4}
+          {...HERO_MOTION}
           timelineRef={timelineRef}
           className="grid w-full max-w-4xl grid-cols-2 gap-x-8 gap-y-4 rounded-lg bg-black/20 p-4 backdrop-blur-lg sm:max-w-5xl md:grid-cols-4 md:gap-x-12"
         >
-          {HERO_FEATURE_PILLS.map((item, index) => (
-            <TimelineAnimation
-              key={item.title}
-              once={true}
-              animationNum={9 + index}
-              timelineRef={timelineRef}
-            >
+          {HERO_FEATURE_PILLS.map((item) => (
+            <div key={item.title}>
               <p className="mb-1 text-sm text-white">{item.title}</p>
               <p className="text-xs text-neutral-300">{item.description}</p>
-            </TimelineAnimation>
+            </div>
           ))}
         </TimelineAnimation>
       </div>
